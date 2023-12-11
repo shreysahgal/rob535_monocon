@@ -7,7 +7,7 @@ _C.VERSION = 'v1.0.3'
 _C.DESCRIPTION = "MonoCon Default Configuration"
 
 _C.OUTPUT_DIR = "exps"                           # Output Directory
-_C.SEED = -1                                     # -1: Random Seed Selection
+_C.SEED = 792                                     # -1: Random Seed Selection
 _C.GPU_ID = 0                                    # Index of GPU to use
 
 _C.USE_BENCHMARK = True                          # Value of 'torch.backends.cudnn.benchmark' and 'torch.backends.cudnn.enabled'
@@ -15,9 +15,9 @@ _C.USE_BENCHMARK = True                          # Value of 'torch.backends.cudn
 
 # Data
 _C.DATA = CN()
-_C.DATA.ROOT = 'PATH_TO_DATASET_KITTI_FORMAT'                  # Dataset directory
+_C.DATA.ROOT = '/home/shrey/Documents/rob535_final/monocon_na565/final_proj_data'                  # Dataset directory
 _C.DATA.BATCH_SIZE = 8
-_C.DATA.NUM_WORKERS = 4
+_C.DATA.NUM_WORKERS = 1
 _C.DATA.TRAIN_SPLIT = 'train'
 _C.DATA.TEST_SPLIT = 'val'
 
@@ -26,7 +26,7 @@ _C.DATA.FILTER.MIN_HEIGHT = 25
 _C.DATA.FILTER.MIN_DEPTH = 2
 _C.DATA.FILTER.MAX_DEPTH = 65
 _C.DATA.FILTER.MAX_TRUNCATION = 0.5
-_C.DATA.FILTER.MAX_OCCLUSION = 2
+_C.DATA.FILTER.MAX_OCCLUSION = 3
 
 
 # Model

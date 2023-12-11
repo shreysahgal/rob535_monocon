@@ -46,6 +46,7 @@ class BaseEngine:
         self.val_period = (cfg.PERIOD.EVAL_PERIOD)
         
         # Dataset and Data-Loader
+        print("BUILDING DATASET")
         self.train_dataset, self.train_loader = \
             self.build_loader(is_train=True) if not is_test else (None, None)
         self.test_dataset, self.test_loader = self.build_loader(is_train=False)
@@ -198,6 +199,8 @@ class BaseEngine:
         # Load Engine Attributes
         attrs = engine_dict['engine_attrs']
         for attr_k, attr_v in attrs.items():
+            # if (attr_k in ['test_dataset', 'root']):
+            #     continue
             setattr(self, attr_k, attr_v)
         
             

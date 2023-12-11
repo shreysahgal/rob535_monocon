@@ -4,5 +4,9 @@ __pycache__/
 pretrained/
 checkpoint/
 *.pth
-dataset/debug_tools.py
 debugger/
+*exp*/
+final_proj_data/
+*viz*/
+kitti/
+prediction/

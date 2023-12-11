@@ -56,8 +56,8 @@ tprint(f"Using Random Seed {seed}")
 
 # Initialize Engine
 engine = MonoconEngine(cfg, auto_resume=False, is_test=True)
+print(len(engine.test_dataset))
 engine.load_checkpoint(args.checkpoint_file, verbose=True)
-
 
 # Evaluate
 if args.evaluate:
@@ -69,3 +69,10 @@ if args.evaluate:
 if args.visualize:
     tprint("Mode: Visualization")
     engine.visualize(args.save_dir, draw_items=['2d', '3d', 'bev'])
+
+
+
+
+losses = [(19.6906, 12.3132, 12.3011),
+          ()]
+

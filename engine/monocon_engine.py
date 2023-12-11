@@ -62,6 +62,7 @@ class MonoconEngine(BaseEngine):
             max_objs=self.cfg.MODEL.HEAD.MAX_OBJS,
             filter_configs={k.lower(): v for k, v in dict(self.cfg.DATA.FILTER).items()})
         
+        
         loader = DataLoader(
             dataset,
             batch_size=self.cfg.DATA.BATCH_SIZE,
@@ -74,6 +75,7 @@ class MonoconEngine(BaseEngine):
 
     @decorator_timer
     def train_one_epoch(self) -> float:
+
         epoch_losses = []
         for batch_idx, data_dict in enumerate(self.train_loader):
             
@@ -131,10 +133,29 @@ class MonoconEngine(BaseEngine):
             'img_bbox': [],
             'img_bbox2d': []}
         
-        for test_data in tqdm(self.test_loader, desc="Collecting Results..."):
+        for batch_idx, test_data in tqdm(enumerate(self.test_loader), desc="Collecting Results..."):
             test_data = move_data_device(test_data, self.current_device)
             eval_results = self.model.batch_eval(test_data)
             
+            for idx in range(len(eval_results['img_bbox'])):
+                frame_idx = (batch_idx * self.cfg.DATA.BATCH_SIZE) + idx
+                with open (os.path.join('prediction', f'{frame_idx:06}.txt'), 'w') as f:
+
+                    for detection in range(len(eval_results['img_bbox'][idx]['name'])):
+                        det_type = eval_results['img_bbox'][idx]['name'][detection]
+                        truncated = eval_results['img_bbox'][idx]['truncated'][detection]
+                        occluded = eval_results['img_bbox'][idx]['occluded'][detection]
+                        alpha = eval_results['img_bbox'][idx]['alpha'][detection]
+                        bbox = " ".join(map(str, eval_results['img_bbox'][idx]['bbox'][detection]))
+                        dims = " ".join(map(str, eval_results['img_bbox'][idx]['dimensions'][detection]))
+                        pos = " ".join(map(str, eval_results['img_bbox'][idx]['location'][detection]))
+                        rot_y = eval_results['img_bbox'][idx]['rotation_y'][detection]
+                        score = eval_results['img_bbox'][idx]['score'][detection]
+
+                        f.write(f'{det_type} {truncated} {occluded} {alpha} {bbox} {dims} {pos} {rot_y} {score}\n')
+                    f.close()
+
+                
             for field in ['img_bbox', 'img_bbox2d']:
                 eval_container[field].extend(eval_results[field])
         
@@ -152,7 +173,6 @@ class MonoconEngine(BaseEngine):
     def visualize(self, 
                   output_dir: str, 
                   draw_items: List[str] = ['bev', '2d', '3d']):
-        
         cvt_flag = False
         if self.model.training:
             self.model.eval()
